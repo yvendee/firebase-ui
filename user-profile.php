@@ -17,6 +17,152 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
     <!-- <meta http-equiv="refresh" content="5"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+      function renderTableData(data) {
+          // Assuming you have an element with the ID "alerts-container" to display the alerts
+          let userprofileContainer = $('#user-profile-table-container');
+
+          // Clear existing content
+          userprofileContainer.empty();
+
+          // Loop through the data and append each alert to the container
+
+          // data.forEach(item => { // no index
+          data.forEach((item, index) => {
+            console.log(item.ID);
+
+              let Box1 = $('<div>').addClass('box').css('flex-direction', 'row');
+              // let nfbox1 = $('<div>').addClass('nested-box');
+
+              let nfbox1 = $('<div>').addClass('nested-box').css({
+                // 'background-color': 'red', // Example background color
+                'width': '20px' // Example margin
+                // 'border-radius': '5px' // Example border radius
+              });
+              let nsbox1 = $('<div>').addClass('text-box-table-data').css({
+                // 'background-color': 'red', // Example background color
+                'width': '20px' // Example margin
+              }).text(item.ID.toString());
+              nfbox1.append(nsbox1);
+              Box1.append(nfbox1);
+
+
+              let nfbox2 = $('<div>').addClass('nested-box');
+              let nsbox2 = $('<div>').addClass('text-box-table-data').css({
+                'width': '170px' 
+              }).text(item.Fullname.toString());
+              nfbox2.append(nsbox2);
+              Box1.append(nfbox2);
+
+              let nfbox3 = $('<div>').addClass('nested-box');
+              let nsbox3 = $('<div>').addClass('text-box-table-data').text(item.Email.toString());
+              nfbox3.append(nsbox3);
+              Box1.append(nfbox3);
+
+              let nfbox4 = $('<div>').addClass('nested-box');
+              let nsbox4 = $('<div>').addClass('text-box-table-data').text(item.Roles.toString());
+              nfbox4.append(nsbox4);
+              Box1.append(nfbox4);
+
+              let nfbox5 = $('<div>').addClass('nested-box');
+              let nsbox5 = $('<div>').addClass('text-box-table-data').text(item.Department.toString());
+              nfbox5.append(nsbox5);
+              Box1.append(nfbox5);
+
+              let nfbox6 = $('<div>').addClass('nested-box');
+              // let nsbox6 = $('<div>').addClass('text-box-table-edit-button').attr('id', 'edit'+ (index + 1)).text('Edit').on('click', RunEdit);
+
+              let nsbox6 = $('<div>').addClass('text-box-table-edit-button').attr('id', 'edit'+ (index + 1)).text('Edit').on('click', function() {RunEdit('edit' + (index + 1))});
+
+
+
+
+              nfbox6.append(nsbox6);
+              Box1.append(nfbox6);
+
+              let nfbox7 = $('<div>').addClass('nested-box');
+              let nsbox7 = $('<div>').addClass('text-box-table-archive-button').attr('id', 'archive'+ (index + 1)).text('Archive').on('click', function() {RunArchive('archive' + (index + 1))});
+              nfbox7.append(nsbox7);
+              Box1.append(nfbox7);
+
+              userprofileContainer.append(Box1);
+
+
+              // let secondContentContainer = $('<div>');
+
+
+              // let firstBox = $('<div>').addClass('box').css('flex-direction', 'row');
+
+              
+              // let nfbox2 = $('<div>').addClass('nested-box');
+              // let nfbox3 = $('<div>').addClass('nested-box');
+
+              // let secondBox = $('<div>').addClass('box').css('flex-direction', 'row');
+              // let nsbox1 = $('<div>').addClass('nested-box');
+
+              // let imageContainer = $('<div>').addClass('image_container');
+              // let image = $('<img>').addClass('image').attr('src', `images/${item.alert_id.toLowerCase()}-icon.png`).attr('alt', `${item.alert_id} Status`);
+
+              // nsbox1.append(imageContainer, image);
+
+              // let nsbox2 = $('<div>').addClass('nested-box');
+
+              // // Create the nested box for the alert status
+
+              // let strongStatus = $('<strong>').text(item.alert_id.toUpperCase()).addClass('alertTitle');
+              // let underline = $('<div>').addClass('underline');
+              // let statusText = $('<div>').text(item.message).addClass('alertMessage');
+
+              // nsbox2.append(strongStatus, underline, statusText);
+
+
+              // secondBox.append(nsbox1, nsbox2);
+              // nfbox1.append(secondBox);
+
+              // // Create the nested box for the datetime
+              // let datetimeBox = $('<div>').addClass('dateInfo');
+              // let formattedDatetime = new Date(item.datetime).toLocaleString();
+              // // // Append the formatted datetime to the datetime box
+              // datetimeBox.text(formattedDatetime);
+              // nfbox3.append(datetimeBox);
+
+              // firstBox.append(nfbox1, nfbox2, nfbox3);
+              // secondContentContainer.append(firstBox);
+
+              // alertsContainer.append(secondContentContainer);
+          });
+      }
+
+    function fetchData() {
+      $.ajax({
+          url: '+mockup/user-profile-mock.php', // Assuming PHP file name is 'mockup_data.php'
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+              // Filter and print only the entries with Department 'Marketing'
+              // var marketingEntries = data.filter(function(item) {
+              //     return item.Department === 'Marketing';
+              // });
+              // console.log(marketingEntries);
+
+              renderTableData(data);
+          },
+          error: function(xhr, status, error) {
+              console.error('Error:', error); // Print error in console log if any
+          }
+      });
+
+    }
+
+    $(document).ready(function(){
+      fetchData();
+    });
+
+    </script>
 
     <style>
         body {
@@ -278,7 +424,7 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
         margin: 10px 0; /* Add some spacing */
       }
 
-      #roleSelect {
+      #role {
         width: 200px; 
         height: 40px;
         background-color: gray; /* Set background color for the dropdown menu */
@@ -289,7 +435,25 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
       }
 
       /* Style for the dropdown menu options */
-      #roleSelect option {
+      #role option {
+        width: 200px; 
+        height: 40px;
+        background-color: gray; /* Set background color for options */
+        color: black; /* Set text color for options */
+      }
+
+      #arearole {
+        width: 200px; 
+        height: 40px;
+        background-color: gray; /* Set background color for the dropdown menu */
+        color: black; /* Set text color for the dropdown menu */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Add border radius */
+        /*padding: 8px;*/
+      }
+
+      /* Style for the dropdown menu options */
+      #arearole option {
         width: 200px; 
         height: 40px;
         background-color: gray; /* Set background color for options */
@@ -326,28 +490,28 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                 <div class="box" style="flex-direction: row;">
                   <div class="nested-box">
                       <div class="text-box-modal-label"> Employee ID </div>
-                      <div class="input-container">
-                          <input type="text">
+                      <div class="input-container" >
+                          <input type="text" id="employeeid">
                       </div>
                   </div>
                   <div class="nested-box">
-                      <div class="text-box-modal-label"> Last Name </div>
-                      <div class="input-container">
-                          <input type="text">
+                      <div class="text-box-modal-label" > Last Name </div>
+                      <div class="input-container" >
+                          <input type="text" id="lastname">
                       </div>
                   </div> 
                 </div>
                 <div class="box" style="flex-direction: row;">
                   <div class="nested-box">
-                      <div class="text-box-modal-label"> Middle Name </div>
-                      <div class="input-container">
-                          <input type="text">
+                      <div class="text-box-modal-label" > Middle Name </div>
+                      <div class="input-container" >
+                          <input type="text" id="middlename">
                       </div>
                   </div>
                   <div class="nested-box">
-                      <div class="text-box-modal-label"> First Name </div>
-                      <div class="input-container">
-                          <input type="text">
+                      <div class="text-box-modal-label" > First Name </div>
+                      <div class="input-container" >
+                          <input type="text" id="firstname">
                       </div>
                   </div> 
                 </div>
@@ -356,7 +520,7 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div class="text-box-modal-label"> Role </div>
                       <div class="input-container">
-                        <select id="roleSelect">
+                        <select id="role">
                             <option value="Area Coordinator">Area Coordinator</option>
                             <option value="Program Head">Program Head</option>
                         </select>
@@ -365,7 +529,7 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div class="text-box-modal-label"> Password </div>
                       <div class="input-container">
-                          <input type="password">
+                          <input type="password" id="password">
                       </div>
                   </div> 
                 </div>
@@ -374,7 +538,7 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div class="text-box-modal-label"> Area </div>
                       <div class="input-container">
-                        <select id="roleSelect">
+                        <select id="arearole">
                             <option value="Area 1">Area 1</option>
                             <option value="Area 2">Area 2</option>
                             <option value="Area 3">Area 3</option>
@@ -473,12 +637,15 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="text-box-table-header">Archive</div>
             </div> 
 
-<!--             <div class="nested-box">
-                  <div style="width: 10px;">&nbsp;</div>
-            </div>  -->
+
           </div>
 
-          <div class="box" style="flex-direction: row;">
+
+
+          <div id="user-profile-table-container"> </div>
+
+
+<!--           <div class="box" style="flex-direction: row;">
             <div class="nested-box" style="width: 10px;">
                   <div class="text-box-table-data" style="width: 10px;">1</div>
             </div>
@@ -507,15 +674,48 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
             <div class="nested-box">
                   <div class="text-box-table-archive-button" id="archive1" onClick="RunArchive()">Archive</div>
             </div> 
-
-<!--             <div class="nested-box">
-                  <div style="width: 10px;">&nbsp;</div>
-            </div> -->
-          </div> 
+          </div>  -->
 
         </div>
 
       <script>
+
+        //function RunEdit(){
+
+        //  var element = document.getElementById('edit1');
+        //  element.style.backgroundColor = 'red';
+
+        //  setTimeout(function() {
+        //    element.style.backgroundColor = '#EED202';
+        //  }, 200); 
+        //}
+
+       function RunArchive(buttonId){
+
+          
+
+          var element = document.getElementById(buttonId);
+          element.style.backgroundColor = 'red';
+
+          setTimeout(function() {
+            element.style.backgroundColor = '#EED202';
+          }, 200); 
+
+          alert(buttonId.toString());
+        }
+
+        function RunEdit(buttonId) {
+
+            var editButton = document.getElementById(buttonId);
+            editButton.style.backgroundColor = 'red';
+
+            setTimeout(function() {
+                editButton.style.backgroundColor = 'gray';
+            }, 200); 
+
+            alert(buttonId.toString());
+        }
+
 
           // Function to show the modal
           function showModal() {
@@ -530,19 +730,18 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
 
         function AddUserClose(){
 
-        
-
+      
           var addusercloseID = document.getElementById('adduserclose');
           addusercloseID.style.backgroundColor = 'red';
 
           setTimeout(function() {
             addusercloseID.style.backgroundColor = 'gray';
           }, 200); 
+
+          alert("Close");
         }
 
         function AddUserSave(){
-
-      
 
           var addusercloseID = document.getElementById('addusersave');
           addusercloseID.style.backgroundColor = 'red';
@@ -550,6 +749,45 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
           setTimeout(function() {
             addusercloseID.style.backgroundColor = 'blue';
           }, 200); 
+
+          // alert("Save");
+
+          var employeeid = document.getElementById("employeeid").value;
+          var lastname = document.getElementById("lastname").value;
+          var firstname = document.getElementById("firstname").value;
+          var middlename = document.getElementById("middlename").value;
+          var password = document.getElementById("password").value;
+    
+          // var employeeid = document.getElementById("employeeid").value;
+          var role = document.getElementById("role");
+          var select_role = role.options[role.selectedIndex].value;
+          var areadrole = document.getElementById("arearole");
+          var select_arearole = areadrole.options[areadrole.selectedIndex].value;
+
+          // // Display the value in the console
+          console.log("Employee ID:", employeeid);
+          console.log("Last Name:", lastname);
+          console.log("Middle Name:", middlename);
+          console.log("First Name:", firstname);
+          console.log("Password:", password);
+
+          console.log("Employee ID:", employeeid);
+          console.log("Role:", select_role);
+          console.log("Area Role:", select_arearole);
+
+          var employeeData = {
+              "Employee ID": employeeid,
+              "Last Name": lastname,
+              "Middle Name": middlename,
+              "First Name": firstname,
+              "Password": password,
+              "Role": select_role,
+              "Area Role": select_arearole
+          };
+
+          // console.log(JSON.stringify(employeeData));
+          alert(JSON.stringify(employeeData));
+
         }
 
 
@@ -565,26 +803,6 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
           }, 200); 
         }
 
-
-        function RunEdit(){
-
-          var element = document.getElementById('edit1');
-          element.style.backgroundColor = 'red';
-
-          setTimeout(function() {
-            element.style.backgroundColor = 'gray';
-          }, 200); 
-        }
-
-        function RunArchive(){
-
-          var element = document.getElementById('archive1');
-          element.style.backgroundColor = 'red';
-
-          setTimeout(function() {
-            element.style.backgroundColor = '#EED202';
-          }, 200); 
-        }
 
         function EPtogglenativedropdown() {
           var nativedropdown = document.querySelector('.nativedropdown');
