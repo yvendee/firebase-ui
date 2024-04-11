@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Data with AJAX</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<script>
+$(document).ready(function(){
+    $.ajax({
+        url: 'user-profile-mock.php', // Assuming PHP file name is 'mockup_data.php'
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Filter and print only the entries with Department 'Marketing'
+            var marketingEntries = data.filter(function(item) {
+                return item.Department === 'Marketing';
+            });
+            console.log(marketingEntries);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error); // Print error in console log if any
+        }
+    });
+});
+</script>
+
+</body>
+</html>
