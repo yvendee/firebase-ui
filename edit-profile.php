@@ -1,11 +1,11 @@
 <?php
-// // dynamic_chart.php
-// include("includes/header.php");
-// include("includes/navbar.php");
-// include("includes/topbar.php");
+// dynamic_chart.php
+include("includes/header.php");
+include("includes/navbar.php");
+include("includes/topbar.php");
 
 // //Include necessary files and initialize Firebase
-// require_once "dbcon.php"; // Include your Firebase configuration file
+require_once "dbcon.php"; // Include your Firebase configuration file
 
 ?>
 
