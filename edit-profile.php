@@ -1,11 +1,11 @@
 <?php
-// dynamic_chart.php
-include('includes/header.php');
-include('includes/navbar.php');
-include('includes/topbar.php');
+// // dynamic_chart.php
+// include("includes/header.php");
+// include("includes/navbar.php");
+// include("includes/topbar.php");
 
-//Include necessary files and initialize Firebase
-require_once 'dbcon.php'; // Include your Firebase configuration file
+// //Include necessary files and initialize Firebase
+// require_once "dbcon.php"; // Include your Firebase configuration file
 
 ?>
 
@@ -17,6 +17,226 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
     <!-- <meta http-equiv="refresh" content="3"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script type="text/javascript">
+
+  function renderYearlist(data) {
+      let yearlistContainer = $('#yearlist-container');
+
+  
+    yearlistContainer.empty();
+    data.forEach((item, index) => {
+      console.log(item);
+    
+        let nfbox1 = $('<a>').attr('href', '#').text(item).on('click', function() {
+            selectOptionForDropDown(item);
+        });
+        yearlistContainer.append(nfbox1);
+    });
+
+  }
+
+   function fetchYearList() {
+        fetch('+mockup/edit-profile-year.php')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                renderYearlist(data);
+                setDefaultYear(data[0]);
+            })
+            .catch(error => console.error('Error fetching year list:', error));
+    }
+
+    // Call the fetchYearList function when the page loads
+    fetchYearList();
+
+    function setDefaultYear(year){
+      var selectedOptionForDropDownElement = document.getElementById('selectedOptionForDropDown');
+          selectedOptionForDropDownElement.textContent = year;
+    }
+    
+  var userinfo = true;
+
+    // Function to handle file selection
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        uploadImage(file);
+    }
+
+    // Function to upload the selected image
+    function uploadImage(file) {
+        if (!file) {
+            console.log('No file selected.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('+mockup/edit-profile-upload.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log('Image uploaded successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error uploading image:', error);
+        });
+    }
+
+    // DOMContentLoaded event listener
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the upload button element
+        const uploadButton = document.getElementById('uploadButton');
+        // Add event listener to the upload button
+        uploadButton.addEventListener('click', function() {
+            // Trigger click event on the file input element
+            document.getElementById('fileInput').click();
+        });
+
+        // Add event listener to the file input element for handling file selection
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', handleFileSelect);
+    });
+
+  function UploadButton() {
+      var element = document.getElementById("uploadbutton");
+      element.style.backgroundColor = "red";
+      setTimeout(function() {
+          element.style.backgroundColor = "#EED202";
+      }, 200);
+  }
+
+  function SaveButton() {
+      var element = document.getElementById("savebutton");
+      element.style.backgroundColor = "red";
+      setTimeout(function() {
+          element.style.backgroundColor = "#EED202";
+      }, 200);
+      alert("save button click");
+  }
+
+  function SetButton() {
+      var element = document.getElementById("setbutton");
+      element.style.backgroundColor = "red";
+      setTimeout(function() {
+          element.style.backgroundColor = "#EED202";
+      }, 200);
+
+      var selectedOptionForDropDownElement = document.getElementById('selectedOptionForDropDown');
+      var selected_year = selectedOptionForDropDownElement.textContent;
+      alert("selected year is " + selected_year);
+  }
+
+  function UpdateButton() {
+      var element = document.getElementById("updatebutton");
+      element.style.backgroundColor = "red";
+      setTimeout(function() {
+          element.style.backgroundColor = "#EED202";
+      }, 200);
+
+      var data = {}; // Create an empty object to store the user data
+
+      if (userinfo) {
+          // If user info is available
+          data.userinfo = true;
+          data.lastname = document.getElementById("lastname").value;
+          data.middlename = document.getElementById("middlename").value;
+          data.firstname = document.getElementById("firstname").value;
+          data.suffix = document.getElementById("suffix").value;
+          data.extension = document.getElementById("extension").value;
+          data.email = document.getElementById("email").value;
+          data.role = document.getElementById("roleAsInput").value;
+          data.department = document.getElementById("departmentInput").value;
+      } else {
+          // If user info is not available, you can still gather the data
+          data.userinfo = false;
+          data.lastname = document.getElementById("lastname").value;
+          data.middlename = document.getElementById("middlename").value;
+          data.firstname = document.getElementById("firstname").value;
+          data.suffix = document.getElementById("suffix").value;
+          data.extension = document.getElementById("extension").value;
+          data.email = document.getElementById("email").value;
+          data.password = document.getElementById("roleAsInput").value;
+          data.confirmpassword = document.getElementById("departmentInput").value;
+      }
+
+      // Convert the data object to JSON format
+      var jsonData = JSON.stringify(data);
+
+      // Log the JSON data to the console
+      console.log(jsonData);
+      alert(jsonData);
+  }
+
+  function EPtogglenativedropdown() {
+      var nativedropdown = document.querySelector(".nativedropdown");
+      nativedropdown.classList.toggle("active");
+  }
+
+  function selectOptionForDropDown(option) {
+      var selectedOptionForDropDownElement = document.getElementById("selectedOptionForDropDown");
+      selectedOptionForDropDownElement.textContent = option;
+      EPtogglenativedropdown(); // Close the nativedropdown after selection
+  }
+
+  function UserInfo() {
+      userinfo = true;
+      var userinfoID = document.getElementById("userinfo");
+      userinfoID.classList.add("text-underline");
+
+      var editinfoID = document.getElementById("editinfo");
+      editinfoID.classList.remove("text-underline");
+
+      var dynamicinput1ID = document.getElementById("dynamic-input1");
+      dynamicinput1ID.textContent = "Role As";
+
+      var dynamicinput2ID = document.getElementById("dynamic-input2");
+      dynamicinput2ID.textContent = "Department";
+
+      // Set placeholder dynamically for roleAsInput
+      var roleAsPlaceholder = document.getElementById("dynamic-input1").textContent.trim();
+      document.getElementById("roleAsInput").setAttribute("placeholder", roleAsPlaceholder);
+
+      // Set placeholder dynamically for departmentInput
+      var departmentPlaceholder = document.getElementById("dynamic-input2").textContent.trim();
+      document.getElementById("departmentInput").setAttribute("placeholder", departmentPlaceholder);
+  }
+
+  function EditInfo() {
+      userinfo = false;
+
+      var userinfoID = document.getElementById("userinfo");
+      userinfoID.classList.remove("text-underline");
+
+      var editinfoID = document.getElementById("editinfo");
+      editinfoID.classList.add("text-underline");
+
+      var dynamicinput1ID = document.getElementById("dynamic-input1");
+      dynamicinput1ID.textContent = "Password";
+
+      var dynamicinput2ID = document.getElementById("dynamic-input2");
+      dynamicinput2ID.textContent = "Confirm Password";
+
+      // Set placeholder dynamically for roleAsInput
+      var roleAsPlaceholder = document.getElementById("dynamic-input1").textContent.trim();
+      document.getElementById("roleAsInput").setAttribute("placeholder", roleAsPlaceholder);
+
+      // Set placeholder dynamically for departmentInput
+      var departmentPlaceholder = document.getElementById("dynamic-input2").textContent.trim();
+      document.getElementById("departmentInput").setAttribute("placeholder", departmentPlaceholder);
+  }
+
+</script>
 
     <style>
         body {
@@ -280,7 +500,22 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
           text-decoration: underline;
         }
 
+        .text-box-upload-profile {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Hide the default file input */
+        #fileInput {
+            display: none;
+        }
+
     </style>
+
+
+
 
 
 </head>
@@ -301,9 +536,16 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                     <div class="text-box-user-status">Area Coordinator</div>
                 </div>
 
-                <div class="nested-box">
+<!--                 <div class="nested-box">
                     <div class="text-box-upload-profile" id="uploadbutton" onClick="UploadButton()">Upload Profile</div>
-                </div>
+                </div> -->
+
+<div class="nested-box">
+    <!-- Hidden file input element -->
+    <input type="file" id="fileInput" style="display: none;">
+    <!-- Upload button -->
+    <div class="text-box-upload-profile" id="uploadButton">Upload</div>
+</div>
 
                 <div class="nested-box">
                     <div class="text-box">&nbsp;</div>
@@ -323,10 +565,10 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
 
                 <div class="nested-box">
                     <div class="nativedropdown" onclick="EPtogglenativedropdown()">
-                        <span id="selectedOptionForDropDown">2014-2026</span>
+                        <span id="selectedOptionForDropDown" id="default-option"></span>
                         <div class="nativedropdown-content">
-                          <a href="#" onclick="selectOptionForDropDown('option1')">2015-2026</a>
-                          <a href="#" onclick="selectOptionForDropDown('option2')">2014-2026</a>
+                          <div id="yearlist-container"> </div>
+
                         </div>
                     </div>
                 </div> 
@@ -368,13 +610,13 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div> Last Name </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Lastname">
+                          <input type="text" placeholder="Lastname" id="lastname">
                       </div>
                   </div>
                   <div class="nested-box">
                       <div> Middle Name </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Middlename">
+                          <input type="text" placeholder="Middlename" id="middlename">
                       </div>
                   </div>
                 </div>
@@ -383,13 +625,13 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div> First Name </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Firstname">
+                          <input type="text" placeholder="Firstname" id="firstname">
                       </div>
                   </div>
                   <div class="nested-box">
                       <div> Suffix </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Suffix">
+                          <input type="text" placeholder="Suffix" id="suffix">
                       </div>
                   </div>
                 </div>
@@ -398,13 +640,13 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
                   <div class="nested-box">
                       <div> Extension </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Extension">
+                          <input type="text" placeholder="Extension" id="extension">
                       </div>
                   </div>
                   <div class="nested-box">
                       <div> Email Address </div>
                       <div class="input-container3">
-                          <input type="text" placeholder="Email Address">
+                          <input type="text" placeholder="Email Address" id="email">
                       </div>
                   </div>
                 </div>
@@ -441,111 +683,7 @@ require_once 'dbcon.php'; // Include your Firebase configuration file
 
             </div>
 
-      <script>
 
-        function UploadButton() {
-          var element = document.getElementById('uploadbutton');
-          element.style.backgroundColor = 'red';
-          setTimeout(function() {
-            element.style.backgroundColor = '#EED202';
-          }, 200);
-        }
-
-        function SaveButton() {
-          var element = document.getElementById('savebutton');
-          element.style.backgroundColor = 'red';
-          setTimeout(function() {
-            element.style.backgroundColor = '#EED202';
-          }, 200);
-        }
-
-        function SetButton() {
-          var element = document.getElementById('setbutton');
-          element.style.backgroundColor = 'red';
-          setTimeout(function() {
-            element.style.backgroundColor = '#EED202';
-          }, 200);
-        }
-
-        function UpdateButton() {
-          var element = document.getElementById('updatebutton');
-          element.style.backgroundColor = 'red';
-          setTimeout(function() {
-            element.style.backgroundColor = '#EED202';
-          }, 200);
-        }
-
-
-
-        function EPtogglenativedropdown() {
-          var nativedropdown = document.querySelector('.nativedropdown');
-          nativedropdown.classList.toggle('active');
-        }
-
-        function selectOptionForDropDown(option) {
-          var selectedOptionForDropDownElement = document.getElementById('selectedOptionForDropDown');
-          selectedOptionForDropDownElement.textContent = option;
-          // localStorage.setItem("month_year", "March 2024");
-          // localStorage.setItem("month_year", option);
-          EPtogglenativedropdown(); // Close the nativedropdown after selection
-          // window.location.replace('graph.html');
-          //
-        }
-
-
-        function UserInfo(){
-            var userinfoID = document.getElementById('userinfo');
-            userinfoID.classList.add("text-underline");
-
-            var editinfoID = document.getElementById('editinfo');
-            editinfoID.classList.remove("text-underline");
-
-            var dynamicinput1ID = document.getElementById('dynamic-input1');
-            dynamicinput1ID.innerHTML = "Role As";
-
-            var dynamicinput2ID = document.getElementById('dynamic-input2');
-            dynamicinput2ID.innerHTML = "Department";
-
-            // Set placeholder dynamically for roleAsInput
-            var roleAsPlaceholder = document.getElementById('dynamic-input1').textContent.trim();
-            document.getElementById('roleAsInput').setAttribute('placeholder', roleAsPlaceholder);
-
-            // Set placeholder dynamically for departmentInput
-            var departmentPlaceholder = document.getElementById('dynamic-input2').textContent.trim();
-            document.getElementById('departmentInput').setAttribute('placeholder', departmentPlaceholder);
-
-
-        }
-
-        function EditInfo(){
-
-            var userinfoID = document.getElementById('userinfo');
-            userinfoID.classList.remove("text-underline");
-
-            var editinfoID = document.getElementById('editinfo');
-            editinfoID.classList.add("text-underline");
-
-            var dynamicinput1ID = document.getElementById('dynamic-input1');
-            dynamicinput1ID.innerHTML = "Password";
-
-            var dynamicinput2ID = document.getElementById('dynamic-input2');
-            dynamicinput2ID.innerHTML = "Confirm Password";
-
-            // Set placeholder dynamically for roleAsInput
-            var roleAsPlaceholder = document.getElementById('dynamic-input1').textContent.trim();
-            document.getElementById('roleAsInput').setAttribute('placeholder', roleAsPlaceholder);
-
-            // Set placeholder dynamically for departmentInput
-            var departmentPlaceholder = document.getElementById('dynamic-input2').textContent.trim();
-            document.getElementById('departmentInput').setAttribute('placeholder', departmentPlaceholder);
-
-            // var dynamicinput2ID = document.getElementById('dynamic-input2');
-            // dynamicinput2ID.textContent("Confirm Password");
-
-          // alert("editinfo");
-        }
-
-      </script>
 
 
     </body>
